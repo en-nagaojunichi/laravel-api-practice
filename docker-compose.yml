@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel12_app
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - db
+      - redis
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: laravel12_web
+    ports:
+      - "8081:80"
+    volumes:
+      - ./src:/var/www
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.4
+    container_name: laravel12_db
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "33060:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    container_name: laravel12_redis
+    
+volumes:
+  dbdata:
