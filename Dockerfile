@@ -19,4 +19,4 @@ RUN git config --global --add safe.directory /var/www
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+WORKDIR /var/www/src 

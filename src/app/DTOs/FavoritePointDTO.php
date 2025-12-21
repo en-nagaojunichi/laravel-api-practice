@@ -10,7 +10,8 @@ final class FavoritePointDTO
         public readonly string $name,
         public readonly bool $is_active,
         public readonly int $sort_order
-    ) {}
+    ) {
+    }
 
     /**
      * 配列からDTOを生成
@@ -20,8 +21,8 @@ final class FavoritePointDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['name'] ?? ''
-                $data['is_active'] ?? false,
+            $data['name'] ?? '',
+            $data['is_active'] ?? false,
             $data['sort_order'] ?? 0
         );
     }
@@ -57,7 +58,7 @@ final class FavoritePointDTO
     {
         return array_filter(
             $this->toCreateArray(),
-            fn(mixed $value): bool => $value !== null
+            fn (mixed $value): bool => $value !== null
         );
     }
 }
