@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Post2;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Post;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Post2>
+ * @extends Factory<Post>
  */
 final class Post2Factory extends Factory
 {
-    protected $model = Post2::class;
+    protected $model = Post::class;
 
     /**
      * @return array<string, mixed>

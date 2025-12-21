@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\Api\ApiFavoritePointController;
 use App\Http\Controllers\Api\ApiPost2Controller;
 use App\Http\Controllers\Api\ApiPostController;
-use App\Http\Controllers\Api\ApiFavoritePointController;
 use Illuminate\Support\Facades\Route;
 
 // 例：疎通確認
-Route::get('/health', fn() => ['ok' => true]);
+Route::get('/health', fn () => ['ok' => true]);
 
 Route::apiResource('favorite-points', ApiFavoritePointController::class);
 

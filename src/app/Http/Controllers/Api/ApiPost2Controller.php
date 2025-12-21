@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Post2\StoreRequest;
 use App\Http\Requests\Api\Post2\UpdateRequest;
 use App\Http\Resources\Post2Resource;
-use App\Models\Post2;
+use App\Models\Post;
 use App\Services\Post2Service;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -19,7 +19,8 @@ final class ApiPost2Controller extends Controller
 {
     public function __construct(
         private readonly Post2Service $service
-    ) {}
+    ) {
+    }
 
     /**
      * 一覧取得（ページネーション）
@@ -35,7 +36,7 @@ final class ApiPost2Controller extends Controller
     /**
      * 詳細取得
      */
-    public function show(Post2 $post2): Post2Resource
+    public function show(Post $post2): Post2Resource
     {
         return new Post2Resource($post2);
     }
@@ -56,7 +57,7 @@ final class ApiPost2Controller extends Controller
     /**
      * 更新
      */
-    public function update(UpdateRequest $request, Post2 $post2): Post2Resource
+    public function update(UpdateRequest $request, Post $post2): Post2Resource
     {
         $dto = Post2DTO::fromArray($request->payload());
         $updated = $this->service->update($post2, $dto);
@@ -67,7 +68,7 @@ final class ApiPost2Controller extends Controller
     /**
      * 削除
      */
-    public function destroy(Post2 $post2): \Illuminate\Http\Response
+    public function destroy(Post $post2): \Illuminate\Http\Response
     {
         $this->service->delete($post2);
 

@@ -13,7 +13,8 @@ final class Post2DTO
         public readonly ?string $body,
         public readonly string $status,
         public readonly ?string $published_at
-    ) {}
+    ) {
+    }
 
     /**
      * 配列からDTOを生成
