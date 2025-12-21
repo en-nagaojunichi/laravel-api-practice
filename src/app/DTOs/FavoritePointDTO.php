@@ -20,8 +20,8 @@ final class FavoritePointDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['name'] ?? '',
-            $data['is_active'] ?? false,
+            $data['name'] ?? ''
+                $data['is_active'] ?? false,
             $data['sort_order'] ?? 0
         );
     }
