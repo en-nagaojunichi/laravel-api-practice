@@ -57,7 +57,7 @@ final class FavoritePointDTO
     {
         return array_filter(
             $this->toCreateArray(),
-            fn (mixed $value): bool => $value !== null
+            fn(mixed $value): bool => $value !== null
         );
     }
 }
