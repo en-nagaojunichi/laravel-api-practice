@@ -86,7 +86,7 @@ final class RoomApiValidationTest extends TestCase
     {
         // Arrange: 最大文字数を超えるデータ
         $data = [
-            'name' => str_repeat('a', 255 + 1),
+            'name' => str_repeat('a', 100 + 1),
         ];
 
         // Act: 新規作成APIを実行

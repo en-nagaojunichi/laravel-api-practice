@@ -66,6 +66,11 @@ final class RoomService
             $query->where('room_number', $filters['room_number']);
         }
 
+        // name（完全一致）
+        if (isset($filters['name'])) {
+            $query->where('name', $filters['name']);
+        }
+
         // capacity（数値範囲）
         if (isset($filters['capacity'])) {
             $query->where('capacity', $filters['capacity']);
