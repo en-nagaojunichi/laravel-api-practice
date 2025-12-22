@@ -19,7 +19,8 @@ final class ApiFavoritePointController extends Controller
 {
     public function __construct(
         private readonly FavoritePointService $service
-    ) {}
+    ) {
+    }
 
     /**
      * 一覧取得（ページネーション）
