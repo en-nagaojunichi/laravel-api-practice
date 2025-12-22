@@ -17,13 +17,13 @@ class Comment extends Model
         'user_id',
         'author_name',
         'body',
-        'is_approved'
+        'is_approved',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_approved' => 'boolean'
+            'is_approved' => 'boolean',
         ];
     }
 

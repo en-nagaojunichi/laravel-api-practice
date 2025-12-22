@@ -6,12 +6,12 @@ namespace App\Http\Controllers\Api;
 
 use App\DTOs\PostDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Post\IndexRequest;
 use App\Http\Requests\Api\Post\StoreRequest;
 use App\Http\Requests\Api\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,15 +19,20 @@ final class ApiPostController extends Controller
 {
     public function __construct(
         private readonly PostService $service
-    ) {}
+    ) {
+    }
 
     /**
-     * 一覧取得（ページネーション）
+     * 一覧取得（検索・絞込・並び替え・ページネーション）
      */
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(IndexRequest $request): AnonymousResourceCollection
     {
-        $perPage = (int) $request->query('per_page', 20);
-        $paginator = $this->service->paginate($perPage);
+        $paginator = $this->service->search(
+            filters: $request->validated(),
+            sortBy: $request->validated('sort_by', 'created_at'),
+            sortOrder: $request->validated('sort_order', 'desc'),
+            perPage: (int) $request->validated('per_page', 15)
+        );
 
         return PostResource::collection($paginator);
     }

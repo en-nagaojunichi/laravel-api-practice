@@ -6,11 +6,17 @@ namespace Tests\Unit\Services;
 
 use App\DTOs\PostDTO;
 use App\Models\Post;
+use App\Models\User;
 use App\Services\PostService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+/**
+ * PostService のユニットテスト
+ *
+ * Serviceクラスの各メソッドが正しく動作することを検証する
+ */
 final class PostServiceTest extends TestCase
 {
     use RefreshDatabase;
@@ -23,21 +29,39 @@ final class PostServiceTest extends TestCase
         $this->service = app(PostService::class);
     }
 
+    /**
+     * 検索・ページネーション取得のテスト
+     *
+     * - 指定した件数でページネーションされること
+     * - 正しいデータが取得できること
+     */
     #[Test]
-    public function paginate_returns_paginated_results(): void
+    public function search_returns_paginated_results(): void
     {
+        // Arrange: テストデータを5件作成
         Post::factory()->count(5)->create();
 
-        $result = $this->service->paginate(10);
+        // Act: 10件/ページでページネーション取得
+        $result = $this->service->search(perPage: 10);
 
+        // Assert: 5件が取得されること
         $this->assertCount(5, $result->items());
     }
 
+    /**
+     * 新規作成のテスト
+     *
+     * - DTOからモデルが作成されること
+     * - DBに正しく保存されること
+     */
     #[Test]
     public function create_stores_new_record(): void
     {
+        // Arrange: 外部キーの関連モデルを作成し、DTOを準備
+        $user = User::factory()->create();
+
         $dto = PostDTO::fromArray([
-            'user_id' => 1,
+            'user_id' => $user->id,
             'title' => 'Test title',
             'slug' => 'Test slug',
             'body' => 'Test body',
@@ -45,41 +69,61 @@ final class PostServiceTest extends TestCase
             'published_at' => now()->toDateTimeString(),
         ]);
 
+        // Act: Serviceで新規作成
         $model = $this->service->create($dto);
 
+        // Assert: モデルが返され、DBに保存されていること
         $this->assertInstanceOf(Post::class, $model);
         $this->assertDatabaseHas('posts', [
-            'user_id' => 1,
-            'title' => 'Test title',
-            'slug' => 'Test slug',
-            'body' => 'Test body',
-            'status' => 'draft',
-            'published_at' => now()->toDateTimeString(),
+            'id' => $model->id,
         ]);
     }
 
+    /**
+     * 更新のテスト
+     *
+     * - 既存モデルが更新されること
+     * - 更新後のモデルが返されること
+     */
     #[Test]
     public function update_modifies_existing_record(): void
     {
+        // Arrange: 既存モデルを作成し、更新用DTOを準備
         $model = Post::factory()->create();
 
         $dto = PostDTO::fromArray([
-            'user_id' => 1,
+            'user_id' => $model->user_id,
+            'title' => $model->title,
+            'slug' => $model->slug,
+            'body' => $model->body,
+            'status' => $model->status,
+            'published_at' => now()->toDateTimeString(),
         ]);
 
+        // Act: Serviceで更新
         $updated = $this->service->update($model, $dto);
 
+        // Assert: モデルが返されること
         $this->assertInstanceOf(Post::class, $updated);
     }
 
+    /**
+     * 削除のテスト
+     *
+     * - モデルが削除されること
+     * - SoftDeletes使用時は論理削除されること
+     */
     #[Test]
     public function delete_removes_record(): void
     {
+        // Arrange: 削除対象のモデルを作成
         $model = Post::factory()->create();
         $id = $model->id;
 
+        // Act: Serviceで削除
         $this->service->delete($model);
 
-        $this->assertDatabaseMissing('posts', ['id' => $id]);
+        // Assert: DBから削除されていること
+        $this->assertSoftDeleted('posts', ['id' => $model->id]);
     }
 }

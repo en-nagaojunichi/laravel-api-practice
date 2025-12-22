@@ -13,7 +13,8 @@ final class PostDTO
         public readonly ?string $body,
         public readonly string $status,
         public readonly ?string $published_at
-    ) {}
+    ) {
+    }
 
     /**
      * 配列からDTOを生成
@@ -35,10 +36,6 @@ final class PostDTO
     /**
      * 新規作成用の配列を返す
      *
-     * 【カスタマイズ例】
-     * - デフォルト値の設定: 'is_active' => $this->is_active ?? true
-     * - 計算値の追加: 'slug' => Str::slug($this->title)
-     *
      * @return array<string, mixed>
      */
     public function toCreateArray(): array
@@ -55,10 +52,6 @@ final class PostDTO
 
     /**
      * 更新用の配列を返す（null値を除外）
-     *
-     * 【注意】
-     * - 部分更新に対応するため、nullのフィールドは除外している
-     * - 明示的にnullを設定したい場合は、このメソッドをカスタマイズする
      *
      * @return array<string, mixed>
      */

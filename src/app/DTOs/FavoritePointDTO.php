@@ -10,7 +10,8 @@ final class FavoritePointDTO
         public readonly string $name,
         public readonly bool $is_active,
         public readonly int $sort_order
-    ) {}
+    ) {
+    }
 
     /**
      * 配列からDTOを生成
