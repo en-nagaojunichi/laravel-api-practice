@@ -29,6 +29,7 @@ final class IndexRequest extends FormRequest
             'region' => ['nullable', 'string', 'max:50'],
             'facility_code' => ['nullable', 'string', 'max:10'],
             'room_number' => ['nullable', 'string', 'max:10'],
+            'name' => ['nullable', 'string', 'max:100'],
             'capacity' => ['nullable', 'integer'],
             'capacity_min' => ['nullable', 'integer'],
             'capacity_max' => ['nullable', 'integer'],

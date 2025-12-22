@@ -30,7 +30,7 @@ final class UpdateRequest extends FormRequest
             'facility_code' => ['sometimes', 'filled', 'string', 'max:10'],
             // TODO: unique制約の除外は複合キーに合わせて手動設定が必要
             'room_number' => ['sometimes', 'filled', 'string', 'max:10'],
-            'name' => ['sometimes', 'filled', 'string', 'max:255'],
+            'name' => ['sometimes', 'filled', 'string', 'max:100'],
             'capacity' => ['sometimes', 'filled', 'integer'],
             'is_active' => ['sometimes', 'filled', 'boolean'],
         ];

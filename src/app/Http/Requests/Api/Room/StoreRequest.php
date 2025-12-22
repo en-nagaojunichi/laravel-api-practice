@@ -31,7 +31,7 @@ final class StoreRequest extends FormRequest
             'region' => ['required', 'string', 'max:50', 'unique:rooms,region'],
             'facility_code' => ['required', 'string', 'max:10', 'unique:rooms,facility_code'],
             'room_number' => ['required', 'string', 'max:10', 'unique:rooms,room_number'],
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:100'],
             'capacity' => ['required', 'integer'],
             'is_active' => ['required', 'boolean'],
         ];
