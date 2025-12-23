@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiRoomController;
 use App\Http\Controllers\Api\ApiFavoritePointController;
 use App\Http\Controllers\Api\ApiPost2Controller;
@@ -23,3 +24,5 @@ Route::prefix('rooms')->group(function () {
     Route::put('/{region}/{facilityCode}/{roomNumber}', [ApiRoomController::class, 'update']);
     Route::delete('/{region}/{facilityCode}/{roomNumber}', [ApiRoomController::class, 'destroy']);
 });
+
+Route::apiResource('users', ApiUserController::class);

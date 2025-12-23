@@ -13,6 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('rooms')) {
+            return;  // 既に存在する場合はスキップ
+        }
+
         Schema::create('rooms', function (Blueprint $table) { // 部屋管理テーブル
             $table->string('region', 50)->comment('地域コード');
             $table->string('facility_code', 10)->comment('施設コード');

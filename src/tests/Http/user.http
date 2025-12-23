@@ -1,5 +1,5 @@
 ### ===========================================
-### Room API テスト
+### User API テスト
 ### ===========================================
 ### 使い方: 各リクエストの上の「Send Request」をクリック
 ### ===========================================
@@ -15,90 +15,79 @@ Accept: application/json
 ### -------------------------------------------
 ### 一覧取得
 ### -------------------------------------------
-GET {{baseUrl}}/rooms
+GET {{baseUrl}}/users
 Accept: application/json
 
 ### -------------------------------------------
-### 詳細取得（複合キー）
+### 詳細取得
 ### -------------------------------------------
-GET {{baseUrl}}/rooms/osaka/FAC999/R999
+GET {{baseUrl}}/users/1
 Accept: application/json
 
 ### -------------------------------------------
 ### 新規作成
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "FAC001",
-    "room_number": "R101",
     "name": "会議室A",
-    "capacity": 10,
-    "is_active": true
+    "email": "test@example.com",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword",
+    "remember_token": "テストremember_token"
 }
 
 ### -------------------------------------------
 ### 更新
 ### -------------------------------------------
-PUT {{baseUrl}}/rooms/tokyo/FAC001/R101
+PUT {{baseUrl}}/users/1
 Content-Type: application/json
 Accept: application/json
 
 {
     "name": "会議室A（更新後）",
-    "capacity": 20,
-    "is_active": true
+    "email": "test@example.com",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword（更新後）",
+    "remember_token": "テストremember_token（更新後）"
 }
 
 ### -------------------------------------------
 ### 削除
 ### -------------------------------------------
-DELETE {{baseUrl}}/rooms/tokyo/FAC001/R101
+DELETE {{baseUrl}}/users/1
 Accept: application/json
 
 ### -------------------------------------------
-### 検索（地域で絞り込み）
+### 検索（nameで絞り込み）
 ### -------------------------------------------
-GET {{baseUrl}}/rooms?region=osaka
-Accept: application/json
-
-### -------------------------------------------
-### 検索（施設コードで絞り込み）
-### -------------------------------------------
-GET {{baseUrl}}/rooms?facility_code=FAC001
-Accept: application/json
-
-### -------------------------------------------
-### 検索（有効フラグで絞り込み）
-### -------------------------------------------
-GET {{baseUrl}}/rooms?is_active=1
+GET {{baseUrl}}/users?name=太郎
 Accept: application/json
 
 ### -------------------------------------------
 ### ページネーション
 ### -------------------------------------------
-GET {{baseUrl}}/rooms?page=1&per_page=5
+GET {{baseUrl}}/users?page=3&per_page=5
 Accept: application/json
 
 ### -------------------------------------------
 ### ソート（作成日で昇順）
 ### -------------------------------------------
-GET {{baseUrl}}/rooms?sort_by=created_at&sort_order=asc
+GET {{baseUrl}}/users?sort_by=created_at&sort_order=asc
 Accept: application/json
 
 ### -------------------------------------------
 ### ソート（作成日で降順）
 ### -------------------------------------------
-GET {{baseUrl}}/rooms?sort_by=created_at&sort_order=desc
+GET {{baseUrl}}/users?sort_by=created_at&sort_order=desc
 Accept: application/json
 
 ### -------------------------------------------
 ### 組み合わせ（ページネーション + ソート）
 ### -------------------------------------------
-GET {{baseUrl}}/rooms?page=1&per_page=10&sort_by=created_at&sort_order=desc
+GET {{baseUrl}}/users?page=1&per_page=10&sort_by=created_at&sort_order=desc
 Accept: application/json
 
 ### ===========================================
@@ -109,14 +98,14 @@ Accept: application/json
 ### 404エラー: 存在しないリソースの取得
 ### 期待: 404 Not Found
 ### -------------------------------------------
-GET {{baseUrl}}/rooms/nonexistent/nonexistent/nonexistent
+GET {{baseUrl}}/users/99999
 Accept: application/json
 
 ### -------------------------------------------
 ### 404エラー: 存在しないリソースの更新
 ### 期待: 404 Not Found
 ### -------------------------------------------
-PUT {{baseUrl}}/rooms/nonexistent/nonexistent/nonexistent
+PUT {{baseUrl}}/users/99999
 Content-Type: application/json
 Accept: application/json
 
@@ -128,117 +117,111 @@ Accept: application/json
 ### 404エラー: 存在しないリソースの削除
 ### 期待: 404 Not Found
 ### -------------------------------------------
-DELETE {{baseUrl}}/rooms/nonexistent/nonexistent/nonexistent
+DELETE {{baseUrl}}/users/99999
 Accept: application/json
 
 ### -------------------------------------------
 ### 422エラー: 空のリクエストボディ（必須フィールド不足）
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {}
 
 ### -------------------------------------------
-### 422エラー: capacity の型不正
+### 422エラー: email_verified_at の型不正
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "FAC001",
-    "room_number": "R101",
     "name": "会議室A",
-    "capacity": "not-a-number",
-    "is_active": true
+    "email": "test@example.com",
+    "email_verified_at": "invalid-date",
+    "password": "テストpassword",
+    "remember_token": "テストremember_token"
 }
 
 ### -------------------------------------------
-### 422エラー: is_active の型不正
+### 422エラー: name の最大長超過（max:255）
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "FAC001",
-    "room_number": "R101",
-    "name": "会議室A",
-    "capacity": 10,
-    "is_active": "not-a-boolean"
+    "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "email": "test@example.com",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword",
+    "remember_token": "テストremember_token"
 }
 
 ### -------------------------------------------
-### 422エラー: region の最大長超過（max:50）
+### 422エラー: email の最大長超過（max:255）
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "facility_code": "FAC001",
-    "room_number": "R101",
     "name": "会議室A",
-    "capacity": 10,
-    "is_active": true
+    "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword",
+    "remember_token": "テストremember_token"
 }
 
 ### -------------------------------------------
-### 422エラー: facility_code の最大長超過（max:10）
+### 422エラー: password の最大長超過（max:255）
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "aaaaaaaaaaaaaaaaaaaa",
-    "room_number": "R101",
     "name": "会議室A",
-    "capacity": 10,
-    "is_active": true
+    "email": "test@example.com",
+    "email_verified_at": "2025-01-01",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "remember_token": "テストremember_token"
 }
 
 ### -------------------------------------------
-### 422エラー: room_number の最大長超過（max:10）
+### 422エラー: remember_token の最大長超過（max:100）
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "FAC001",
-    "room_number": "aaaaaaaaaaaaaaaaaaaa",
     "name": "会議室A",
-    "capacity": 10,
-    "is_active": true
+    "email": "test@example.com",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword",
+    "remember_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
 ### -------------------------------------------
-### 422エラー: name の最大長超過（max:100）
+### 422エラー: email の不正なメール形式
 ### 期待: 422 Unprocessable Entity
 ### -------------------------------------------
-POST {{baseUrl}}/rooms
+POST {{baseUrl}}/users
 Content-Type: application/json
 Accept: application/json
 
 {
-    "region": "tokyo",
-    "facility_code": "FAC001",
-    "room_number": "R101",
-    "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "capacity": 10,
-    "is_active": true
+    "name": "会議室A",
+    "email": "invalid-email-format",
+    "email_verified_at": "2025-01-01",
+    "password": "テストpassword",
+    "remember_token": "テストremember_token"
 }
