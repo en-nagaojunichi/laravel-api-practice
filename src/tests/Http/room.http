@@ -1,0 +1,81 @@
+### ===========================================
+### Room API テスト
+### ===========================================
+### 使い方: 各リクエストの上の「Send Request」をクリック
+### ===========================================
+
+@baseUrl = http://localhost:8081/api
+
+### -------------------------------------------
+### ヘルスチェック（疎通確認）
+### -------------------------------------------
+GET {{baseUrl}}/health
+Accept: application/json
+
+### -------------------------------------------
+### 一覧取得
+### -------------------------------------------
+GET {{baseUrl}}/rooms
+Accept: application/json
+
+### -------------------------------------------
+### 詳細取得（複合キー）
+### -------------------------------------------
+GET {{baseUrl}}/rooms/tokyo/FAC001/R101
+Accept: application/json
+
+### -------------------------------------------
+### 新規作成
+### -------------------------------------------
+POST {{baseUrl}}/rooms
+Content-Type: application/json
+Accept: application/json
+
+{
+    "region": "osaka",
+    "facility_code": "FAC999",
+    "room_number": "R999",
+    "name": "会議室A",
+    "capacity": 10,
+    "is_active": true
+}
+
+### -------------------------------------------
+### 更新
+### -------------------------------------------
+PUT {{baseUrl}}/rooms/osaka/FAC999/R999
+Content-Type: application/json
+Accept: application/json
+
+{
+    "region": "osaka",
+    "facility_code": "FAC999",
+    "room_number": "R999",
+    "name": "会議室A（更新後）",
+    "capacity": 20,
+    "is_active": true
+}
+
+### -------------------------------------------
+### 削除
+### -------------------------------------------
+DELETE {{baseUrl}}/rooms/tokyo/FAC001/R101
+Accept: application/json
+
+### -------------------------------------------
+### 検索（地域で絞り込み）
+### -------------------------------------------
+GET {{baseUrl}}/rooms?region=tokyo
+Accept: application/json
+
+### -------------------------------------------
+### 検索（施設コードで絞り込み）
+### -------------------------------------------
+GET {{baseUrl}}/rooms?facility_code=FAC001
+Accept: application/json
+
+### -------------------------------------------
+### 検索（有効フラグで絞り込み）
+### -------------------------------------------
+GET {{baseUrl}}/rooms?is_active=1
+Accept: application/json
