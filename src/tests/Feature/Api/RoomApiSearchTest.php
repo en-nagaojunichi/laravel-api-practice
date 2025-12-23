@@ -103,6 +103,60 @@ final class RoomApiSearchTest extends TestCase
     }
 
     /**
+     * フィルタリング - region（完全一致）
+     */
+    #[Test]
+    public function index_filters_by_region(): void
+    {
+        // Arrange: テストデータを作成
+        $target = Room::factory()->create(['region' => 'test-value']);
+        Room::factory()->create(['region' => 'other-value']);
+
+        // Act: regionでフィルタリング
+        $response = $this->getJson('/api/rooms?region=test-value');
+
+        // Assert: フィルタリングされた結果が返されること
+        $response->assertOk();
+        $this->assertCount(1, $response->json('data'));
+    }
+
+    /**
+     * フィルタリング - facility_code（完全一致）
+     */
+    #[Test]
+    public function index_filters_by_facility_code(): void
+    {
+        // Arrange: テストデータを作成
+        $target = Room::factory()->create(['facility_code' => 'test-value']);
+        Room::factory()->create(['facility_code' => 'other-value']);
+
+        // Act: facility_codeでフィルタリング
+        $response = $this->getJson('/api/rooms?facility_code=test-value');
+
+        // Assert: フィルタリングされた結果が返されること
+        $response->assertOk();
+        $this->assertCount(1, $response->json('data'));
+    }
+
+    /**
+     * フィルタリング - name（部分一致）
+     */
+    #[Test]
+    public function index_filters_by_name(): void
+    {
+        // Arrange: テストデータを作成
+        $target = Room::factory()->create(['name' => 'テスト検索値']);
+        Room::factory()->create(['name' => '別の値']);
+
+        // Act: nameでフィルタリング
+        $response = $this->getJson('/api/rooms?name=検索');
+
+        // Assert: フィルタリングされた結果が返されること
+        $response->assertOk();
+        $this->assertCount(1, $response->json('data'));
+    }
+
+    /**
      * フィルタ - capacity（数値完全一致）
      */
     #[Test]
